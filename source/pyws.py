@@ -154,4 +154,19 @@ def getkeystate(key,wait = 1):
 #wait : ミリ秒指定可
 def sleep(wait):
     time.sleep(wait)
+
+#getid - EnumWindows用コールバック関数
+def proc(hwnd,ar):
+    title = winxpgui.GetWindowText(hwnd)
+    if ar[0] in title:
+        #print hwnd, title
+        ar[1].append(hwnd)
+    return 1
+
+#titleをウィンドウタイトルに含むウィンドウのウィンドウハンドルを返します
+def getid(title,n = 0):
+    hwnds = []
+    winxpgui.EnumWindows(proc,[title,hwnds])
+    print hwnds
+    return hwnds[n]
     

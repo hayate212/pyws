@@ -5,6 +5,8 @@ import cv2.cv as cv
 import numpy as np
 import random
 import time
+import sys
+import winxpgui
 from ctypes import *
 user32 = windll.user32
 

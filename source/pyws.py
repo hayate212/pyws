@@ -164,9 +164,34 @@ def proc(hwnd,ar):
     return 1
 
 #titleをウィンドウタイトルに含むウィンドウのウィンドウハンドルを返します
+#title : 検索に使うタイトル
+#n : 何番目のウィンドウハンドルを返すか
 def getid(title,n = 0):
     hwnds = []
     winxpgui.EnumWindows(proc,[title,hwnds])
     print hwnds
     return hwnds[n]
+
+#直接クリック情報を送ります
+#hwnd : ウィンドウハンドル
+#x : x座標
+#y : y座標
+#pbtn : 送るクリック情報 L or lで左クリック,R or rで右クリック
+def PostClick(hwnd,x,y,pbtn = "L"):
+    #WM_LBUTTONDOWN = 0x0201
+    #WM_LBUTTONUP = 0x0202
+    #WM_RBUTTONDOWN = 0x0204
+    #WM_RBUTTONUP = 0x0205
+    if pbtn == "L" or "l":
+        sbtn = 0x0201
+        ebtn = 0x0202
+    elif pbtn == "R" or "r":
+        sbtn = 0x0204
+        ebtn = 0x0205
+
+    #lParam <= x,y
+    point = y * int('0xffff',16) + x
+    winxpgui.PostMessage(hwnd, sbtn, 0, point) # button down
+    m.sleep(0.2)
+    winxpgui.PostMessage(hwnd, ebtn, 0, point)   # button up
     

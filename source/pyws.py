@@ -52,18 +52,19 @@ def compareImg(comImgNp,npimg,check):
 
 #画像認識 ファイル名指定だけで使用可能
 #imgname : 画像ファイルパス
-#capx : キャプチャ左上位置x座標
-#capy : キャプチャ左上位置y座標
-#capwid : キャプチャ横幅
-#caphei : キャプチャ縦幅
-def chkimg(imgname,capx = -1,capy = -1,capwid = -1,caphei = -1,check = 5):
+#check : 何個以上特徴一致でTrueにするか
+#hwnd : ウィンドウハンドルを渡すとウィンドウキャプチャ
+def chkimg(imgname,check = 5,hwnd = None):
     global g_img_x,g_img_y
     #比較に使う画像のロード
     comimg = cv2.imread(imgname,0)
 
     #キャプチャ
-    if(capx > 0 and capy > 0 and capwid > 0 and caphei > 0):
-        baseimg = ImageGrab.grab((capx,capy,capwid,caphei))
+    if hwnd != None:
+        rect = winxpgui.GetWindowRect(hwnd)
+        size = winxpgui.GetClientRect(hwnd)
+        cap = [rect[0],rect[1],size[2]+rect[0],size[3]+rect[1]]
+        baseimg = ImageGrab.grab(cap)
     else:
         baseimg = ImageGrab.grab()
 
@@ -191,7 +192,7 @@ def PostClick(hwnd,x,y,pbtn = "L"):
         sbtn = 0x0204
         ebtn = 0x0205
 
-    #lParam <= x,y
+    # x,y => lParam
     point = y * int('0xffff',16) + x
     winxpgui.PostMessage(hwnd, sbtn, 0, point) # button down
     m.sleep(0.2)
